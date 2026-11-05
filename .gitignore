@@ -1,0 +1,34 @@
+# dependencies
+node_modules/
+__pycache__/
+.venv/
+*.pyc
+
+# build output
+contracts/artifacts/
+contracts/cache/
+contracts/types/
+contracts/ignition/deployments/
+frontend/dist/
+out/
+
+# secrets and local config
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# local deployment records (addresses differ per chain/run)
+contracts/deployments/
+
+# database backups
+backups/
+
+# uploaded documents (development storage) and local logs
+backend/.storage/
+*.log
