@@ -9,7 +9,9 @@ export class ApiError extends Error {
 type Params = Record<string, string | number | boolean | undefined | null>;
 
 function url(path: string, params?: Params): string {
-  const u = new URL(path, BASE);
+  // BASE may be absolute ("http://localhost:8000") or same-origin with a prefix ("/api", proxied by the host).
+  const base = new URL(BASE.endsWith("/") ? BASE : BASE + "/", window.location.origin);
+  const u = new URL(path.replace(/^\//, ""), base);
   for (const [k, v] of Object.entries(params ?? {})) if (v !== undefined && v !== null && v !== "") u.searchParams.set(k, String(v));
   return u.toString();
 }
