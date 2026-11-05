@@ -1,0 +1,302 @@
+{
+ "environment": {
+  "date": "2026-11-04",
+  "os": "Windows 11",
+  "cpu": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+  "python": "3.12.10",
+  "node": "v24.14.1"
+ },
+ "gas": {
+  "deployment": {
+   "TestToken": 914923,
+   "ResolutionManager": 1968347,
+   "PredictionMarket_implementation": 2444680,
+   "MarketFactory": 847515,
+   "total": 6175465
+  },
+  "createMarket": {
+   "runs": 5,
+   "min": 415313,
+   "median": 415313,
+   "max": 432389
+  },
+  "buy": {
+   "first_by_a_new_user": 180819,
+   "repeated": {
+    "runs": 20,
+    "min": 120210,
+    "median": 120516,
+    "max": 154499
+   }
+  },
+  "sell": {
+   "runs": 10,
+   "min": 116937,
+   "median": 117345,
+   "max": 117683
+  },
+  "quoteBuy_view_gas_estimate": 57023,
+  "priceYes_view_gas_estimate": 35094,
+  "resolution": {
+   "propose_resolver_no_bond": 150872,
+   "finalize_and_resolve_market": 98129,
+   "redeem": 59169,
+   "claimResidual": 56330
+  },
+  "oracle": {
+   "proposeBonded": 233031,
+   "dispute": 109037,
+   "arbitrate": 105217
+  },
+  "faucet": 57526
+ },
+ "lmsr": {
+  "browser_typescript": [
+   {
+    "name": "cost()",
+    "calls": 2000000,
+    "ns_per_call": 16,
+    "calls_per_second": 61796677
+   },
+   {
+    "name": "priceYes()",
+    "calls": 2000000,
+    "ns_per_call": 126,
+    "calls_per_second": 7913859
+   },
+   {
+    "name": "quoteBuy()",
+    "calls": 500000,
+    "ns_per_call": 734,
+    "calls_per_second": 1362859
+   },
+   {
+    "name": "sharesForBudget() (80-step bisection)",
+    "calls": 50000,
+    "ns_per_call": 24392,
+    "calls_per_second": 40998
+   }
+  ],
+  "mpmath_50_digit_reference_us_per_cost": 149.3
+ },
+ "database": {
+  "synthetic_data_rows": {
+   "markets": 200,
+   "trades": 200000,
+   "price_snapshots": 200000,
+   "positions": 200000
+  },
+  "queries": {
+   "list markets, newest first (limit 20)": {
+    "runs": 25,
+    "p50_ms": 7.19,
+    "p95_ms": 9.49,
+    "max_ms": 9.51,
+    "mean_ms": 7.57
+   },
+   "list markets by volume": {
+    "runs": 25,
+    "p50_ms": 5.55,
+    "p95_ms": 6.45,
+    "max_ms": 8.04,
+    "mean_ms": 5.69
+   },
+   "list markets, status=active + category": {
+    "runs": 25,
+    "p50_ms": 6.0,
+    "p95_ms": 9.37,
+    "max_ms": 11.21,
+    "mean_ms": 6.42
+   },
+   "list markets, text search": {
+    "runs": 25,
+    "p50_ms": 6.18,
+    "p95_ms": 7.61,
+    "max_ms": 9.82,
+    "mean_ms": 6.26
+   },
+   "market trades, newest 20": {
+    "runs": 25,
+    "p50_ms": 9.13,
+    "p95_ms": 10.93,
+    "max_ms": 12.38,
+    "mean_ms": 9.1
+   },
+   "price history, 500 points": {
+    "runs": 25,
+    "p50_ms": 19.95,
+    "p95_ms": 24.19,
+    "max_ms": 97.83,
+    "mean_ms": 23.36
+   },
+   "trades feed, one wallet": {
+    "runs": 25,
+    "p50_ms": 2.28,
+    "p95_ms": 6.14,
+    "max_ms": 7.48,
+    "mean_ms": 3.27
+   },
+   "analytics overview (all trades)": {
+    "runs": 25,
+    "p50_ms": 254.07,
+    "p95_ms": 337.68,
+    "max_ms": 342.17,
+    "mean_ms": 273.12
+   },
+   "analytics per-market (50)": {
+    "runs": 25,
+    "p50_ms": 110.18,
+    "p95_ms": 146.52,
+    "max_ms": 156.15,
+    "mean_ms": 107.41
+   },
+   "portfolio for a wallet": {
+    "runs": 25,
+    "p50_ms": 2.22,
+    "p95_ms": 3.63,
+    "max_ms": 3.74,
+    "mean_ms": 2.58
+   }
+  },
+  "plans": {
+   "trades by market (newest 20)": {
+    "uses_index": true,
+    "seq_scan": false
+   },
+   "trades by wallet": {
+    "uses_index": true,
+    "seq_scan": false
+   },
+   "markets by category + close time": {
+    "uses_index": false,
+    "seq_scan": true
+   }
+  }
+ },
+ "stack": {
+  "api_latency": {
+   "/health": {
+    "runs": 100,
+    "p50_ms": 9.03,
+    "p95_ms": 13.54,
+    "max_ms": 20.54,
+    "mean_ms": 9.53
+   },
+   "/config": {
+    "runs": 100,
+    "p50_ms": 5.09,
+    "p95_ms": 5.71,
+    "max_ms": 9.35,
+    "mean_ms": 5.19
+   },
+   "/markets": {
+    "runs": 100,
+    "p50_ms": 12.76,
+    "p95_ms": 13.38,
+    "max_ms": 19.42,
+    "mean_ms": 12.86
+   },
+   "/markets/1": {
+    "runs": 100,
+    "p50_ms": 11.04,
+    "p95_ms": 11.98,
+    "max_ms": 18.23,
+    "mean_ms": 11.18
+   },
+   "/markets/1/history": {
+    "runs": 100,
+    "p50_ms": 15.42,
+    "p95_ms": 16.61,
+    "max_ms": 18.46,
+    "mean_ms": 15.58
+   },
+   "/markets/1/trades": {
+    "runs": 100,
+    "p50_ms": 16.38,
+    "p95_ms": 17.85,
+    "max_ms": 21.43,
+    "mean_ms": 16.54
+   },
+   "/trades": {
+    "runs": 100,
+    "p50_ms": 16.27,
+    "p95_ms": 17.38,
+    "max_ms": 20.26,
+    "mean_ms": 16.42
+   },
+   "/analytics/overview": {
+    "runs": 100,
+    "p50_ms": 17.54,
+    "p95_ms": 20.32,
+    "max_ms": 25.53,
+    "mean_ms": 17.9
+   },
+   "/analytics/categories": {
+    "runs": 100,
+    "p50_ms": 10.01,
+    "p95_ms": 10.86,
+    "max_ms": 11.35,
+    "mean_ms": 10.03
+   },
+   "/analytics/markets": {
+    "runs": 100,
+    "p50_ms": 12.8,
+    "p95_ms": 13.72,
+    "max_ms": 18.5,
+    "mean_ms": 12.88
+   },
+   "/portfolio/0x90F79bf6EB2c4f870365E785982E1f101E93b906": {
+    "runs": 100,
+    "p50_ms": 41.26,
+    "p95_ms": 48.11,
+    "max_ms": 161.66,
+    "mean_ms": 43.45
+   },
+   "/resolutions/1": {
+    "runs": 100,
+    "p50_ms": 14.65,
+    "p95_ms": 15.85,
+    "max_ms": 19.17,
+    "mean_ms": 14.74
+   },
+   "/data/sources": {
+    "runs": 100,
+    "p50_ms": 18.25,
+    "p95_ms": 19.42,
+    "max_ms": 21.29,
+    "mean_ms": 18.22
+   }
+  },
+  "indexing_lag": {
+   "runs": 20,
+   "p50_ms": 827.23,
+   "p95_ms": 1015.76,
+   "max_ms": 1064.6,
+   "mean_ms": 845.69,
+   "indexer_poll_interval_s": 0.2,
+   "confirmations": 0
+  },
+  "market_definition_register_ms": 47.0,
+  "resolution": {
+   "evidence_prepare_hash_store": {
+    "runs": 20,
+    "p50_ms": 75.54,
+    "p95_ms": 90.53,
+    "max_ms": 99.47,
+    "mean_ms": 76.83
+   },
+   "finalize_mined_to_visible_resolved_ms": 858.1
+  },
+  "data_ingestion": {
+   "runs": 5,
+   "p50_ms": 249.03,
+   "p95_ms": 789.77,
+   "max_ms": 789.77,
+   "mean_ms": 341.41,
+   "source": "live Open-Meteo archive API",
+   "record_status": "valid",
+   "note": "network-dependent"
+  },
+  "trades_driven": 20
+ }
+}
