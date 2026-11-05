@@ -1,0 +1,119 @@
+# Local development stack:  docker compose up --build
+#   frontend  http://localhost:5173      API docs  http://localhost:8000/docs      chain RPC  http://localhost:8545
+#   Host port 8000 busy? Run with API_PORT=8001 (the frontend build and API URL follow it).
+# The chain is an in-memory Hardhat node: `docker compose restart hardhat-node` resets it (the deployer then
+# redeploys the registry and the indexer rebuilds its read model from the new chain).
+# Everything is configured through environment variables; see .env.example for the full list.
+# These credentials and keys are DEVELOPMENT ONLY. Never reuse them on a shared or public network.
+
+name: verity
+
+x-backend-env: &backend-env
+  DATABASE_URL: postgresql+psycopg://verity:${POSTGRES_PASSWORD:-verity_dev_only}@postgres:5432/verity
+  RPC_URL: http://hardhat-node:8545
+  PUBLIC_RPC_URL: ${PUBLIC_RPC_URL:-http://localhost:8545}   # what the BROWSER uses to reach the chain
+  CHAIN_ID: "31337"
+  CHAIN_NAME: Hardhat Local (docker)
+  DEPLOYMENT_FILE: /deployments/compose.json                # registry address + start block come from the deployer
+  INDEXER_CONFIRMATIONS: "0"                           # local automine chain; use ~12 on a public network
+  SIWE_DOMAIN: localhost:5173
+  SIWE_URI_PREFIX: http://localhost:5173
+  ALLOWED_ORIGINS: '["http://localhost:5173"]'
+  PUBLIC_API_URL: http://localhost:${API_PORT:-8000}
+  STORAGE_DIR: /data/storage
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: verity
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-verity_dev_only}
+      POSTGRES_DB: verity
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verity -d verity"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  hardhat-node:
+    build: ./contracts
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8545:8545"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8545',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_chainId',params:[]})}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  deployer:
+    build: ./contracts
+    restart: "no"
+    depends_on:
+      hardhat-node:
+        condition: service_healthy
+    environment:
+      RPC_URL: http://hardhat-node:8545
+      DEPLOYMENT_NAME: compose
+    volumes:
+      - deployments:/app/deployments
+    # Deploys VerityRegistry and, on the local chain, authorises Hardhat accounts #1 and #2 as demo issuers.
+    # Skipped if the recorded deployment is still live on the node.
+    command: ["sh", "-c", "node scripts/check-deployed.mjs deployments/compose.json http://hardhat-node:8545 && echo 'already deployed' || npx hardhat run scripts/deploy.ts --network localhost"]
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      deployer:
+        condition: service_completed_successfully
+    environment:
+      <<: *backend-env
+      RUN_MIGRATIONS: "1"
+    volumes:
+      - deployments:/deployments:ro
+      - storage:/data/storage
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  indexer:
+    build: ./backend
+    restart: unless-stopped
+    command: ["python", "-m", "app.workers.indexer"]
+    depends_on:
+      api:
+        condition: service_healthy   # migrations have been applied
+    environment:
+      <<: *backend-env
+    volumes:
+      - deployments:/deployments:ro
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:${API_PORT:-8000}}
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5173:80"
+
+volumes:
+  pgdata:
+  deployments:
+  storage:
