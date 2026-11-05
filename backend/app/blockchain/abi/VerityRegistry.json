@@ -1,0 +1,1390 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "admin",
+    "type": "address"
+   },
+   {
+    "internalType": "uint48",
+    "name": "adminTransferDelay",
+    "type": "uint48"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "AccessControlBadConfirmation",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint48",
+    "name": "schedule",
+    "type": "uint48"
+   }
+  ],
+  "name": "AccessControlEnforcedDefaultAdminDelay",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "AccessControlEnforcedDefaultAdminRules",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "defaultAdmin",
+    "type": "address"
+   }
+  ],
+  "name": "AccessControlInvalidDefaultAdmin",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "neededRole",
+    "type": "bytes32"
+   }
+  ],
+  "name": "AccessControlUnauthorizedAccount",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "AlreadyRegistered",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "AlreadyRevoked",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   }
+  ],
+  "name": "BatchNotFound",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "merkleRoot",
+    "type": "bytes32"
+   }
+  ],
+  "name": "BatchRootAlreadyRegistered",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidAddress",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidBatch",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidDocumentId",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint64",
+    "name": "expiresAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "InvalidExpiry",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidHash",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidName",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "InvalidProof",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   }
+  ],
+  "name": "IssuerAlreadyAuthorized",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   }
+  ],
+  "name": "IssuerNotAuthorized",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "NotAuthorizedIssuer",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "NotDocumentOwner",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "caller",
+    "type": "address"
+   }
+  ],
+  "name": "NotRecordIssuer",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "NotRegistered",
+  "type": "error"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint8",
+    "name": "bits",
+    "type": "uint8"
+   },
+   {
+    "internalType": "uint256",
+    "name": "value",
+    "type": "uint256"
+   }
+  ],
+  "name": "SafeCastOverflowedUintDowncast",
+  "type": "error"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "revokedBy",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "BatchDocumentRevoked",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "merkleRoot",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint32",
+    "name": "documentCount",
+    "type": "uint32"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "metadataHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "BatchRegistered",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "revokedBy",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "BatchRevoked",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [],
+  "name": "DefaultAdminDelayChangeCanceled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": false,
+    "internalType": "uint48",
+    "name": "newDelay",
+    "type": "uint48"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint48",
+    "name": "effectSchedule",
+    "type": "uint48"
+   }
+  ],
+  "name": "DefaultAdminDelayChangeScheduled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [],
+  "name": "DefaultAdminTransferCanceled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "newAdmin",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint48",
+    "name": "acceptSchedule",
+    "type": "uint48"
+   }
+  ],
+  "name": "DefaultAdminTransferScheduled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint32",
+    "name": "version",
+    "type": "uint32"
+   },
+   {
+    "indexed": false,
+    "internalType": "enum VerityRegistry.DocumentType",
+    "name": "docType",
+    "type": "uint8"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "metadataHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint64",
+    "name": "expiresAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "DocumentRegistered",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "revokedBy",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "DocumentRevoked",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "authorizedBy",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+   }
+  ],
+  "name": "IssuerAuthorized",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "removedBy",
+    "type": "address"
+   }
+  ],
+  "name": "IssuerRemoved",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "previousAdminRole",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "newAdminRole",
+    "type": "bytes32"
+   }
+  ],
+  "name": "RoleAdminChanged",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "sender",
+    "type": "address"
+   }
+  ],
+  "name": "RoleGranted",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": true,
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   },
+   {
+    "indexed": true,
+    "internalType": "address",
+    "name": "sender",
+    "type": "address"
+   }
+  ],
+  "name": "RoleRevoked",
+  "type": "event"
+ },
+ {
+  "inputs": [],
+  "name": "DEFAULT_ADMIN_ROLE",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "ISSUER_MANAGER_ROLE",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "acceptDefaultAdminTransfer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   },
+   {
+    "internalType": "string",
+    "name": "name",
+    "type": "string"
+   }
+  ],
+  "name": "authorizeIssuer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "batchCount",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "merkleRoot",
+    "type": "bytes32"
+   }
+  ],
+  "name": "batchIdByRoot",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "newAdmin",
+    "type": "address"
+   }
+  ],
+  "name": "beginDefaultAdminTransfer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "cancelDefaultAdminTransfer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint48",
+    "name": "newDelay",
+    "type": "uint48"
+   }
+  ],
+  "name": "changeDefaultAdminDelay",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "defaultAdmin",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "defaultAdminDelay",
+  "outputs": [
+   {
+    "internalType": "uint48",
+    "name": "",
+    "type": "uint48"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "defaultAdminDelayIncreaseWait",
+  "outputs": [
+   {
+    "internalType": "uint48",
+    "name": "",
+    "type": "uint48"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   }
+  ],
+  "name": "documentOwner",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   }
+  ],
+  "name": "getBatch",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "address",
+      "name": "issuer",
+      "type": "address"
+     },
+     {
+      "internalType": "uint64",
+      "name": "registeredAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "revokedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint32",
+      "name": "documentCount",
+      "type": "uint32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "merkleRoot",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "metadataHash",
+      "type": "bytes32"
+     }
+    ],
+    "internalType": "struct VerityRegistry.Batch",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "getIssuer",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "bool",
+      "name": "authorized",
+      "type": "bool"
+     },
+     {
+      "internalType": "uint64",
+      "name": "authorizedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "removedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "string",
+      "name": "name",
+      "type": "string"
+     }
+    ],
+    "internalType": "struct VerityRegistry.Issuer",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   }
+  ],
+  "name": "getRoleAdmin",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "grantRole",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "hasRole",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "isAuthorizedIssuer",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   }
+  ],
+  "name": "latestVersion",
+  "outputs": [
+   {
+    "internalType": "uint32",
+    "name": "",
+    "type": "uint32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "leafOf",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "pure",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "owner",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "pendingDefaultAdmin",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "newAdmin",
+    "type": "address"
+   },
+   {
+    "internalType": "uint48",
+    "name": "schedule",
+    "type": "uint48"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "pendingDefaultAdminDelay",
+  "outputs": [
+   {
+    "internalType": "uint48",
+    "name": "newDelay",
+    "type": "uint48"
+   },
+   {
+    "internalType": "uint48",
+    "name": "schedule",
+    "type": "uint48"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "merkleRoot",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint32",
+    "name": "documentCount",
+    "type": "uint32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "metadataHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "registerBatch",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "enum VerityRegistry.DocumentType",
+    "name": "docType",
+    "type": "uint8"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "metadataHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint64",
+    "name": "expiresAt",
+    "type": "uint64"
+   }
+  ],
+  "name": "registerDocument",
+  "outputs": [
+   {
+    "internalType": "uint32",
+    "name": "version",
+    "type": "uint32"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "issuer",
+    "type": "address"
+   }
+  ],
+  "name": "removeIssuer",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "renounceRole",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "revokeBatch",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32[]",
+    "name": "proof",
+    "type": "bytes32[]"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "revokeBatchDocument",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "reasonHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "revokeDocument",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "role",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "address",
+    "name": "account",
+    "type": "address"
+   }
+  ],
+  "name": "revokeRole",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [],
+  "name": "rollbackDefaultAdminDelay",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes4",
+    "name": "interfaceId",
+    "type": "bytes4"
+   }
+  ],
+  "name": "supportsInterface",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "batchId",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "bytes32[]",
+    "name": "proof",
+    "type": "bytes32[]"
+   }
+  ],
+  "name": "verifyBatchDocument",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "bool",
+      "name": "included",
+      "type": "bool"
+     },
+     {
+      "internalType": "enum VerityRegistry.Status",
+      "name": "status",
+      "type": "uint8"
+     },
+     {
+      "internalType": "address",
+      "name": "issuer",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "issuerAuthorized",
+      "type": "bool"
+     },
+     {
+      "internalType": "uint64",
+      "name": "registeredAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "revokedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "merkleRoot",
+      "type": "bytes32"
+     }
+    ],
+    "internalType": "struct VerityRegistry.BatchVerification",
+    "name": "v",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentHash",
+    "type": "bytes32"
+   }
+  ],
+  "name": "verifyDocument",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "enum VerityRegistry.Status",
+      "name": "status",
+      "type": "uint8"
+     },
+     {
+      "internalType": "address",
+      "name": "issuer",
+      "type": "address"
+     },
+     {
+      "internalType": "bool",
+      "name": "issuerAuthorized",
+      "type": "bool"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "documentId",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint32",
+      "name": "version",
+      "type": "uint32"
+     },
+     {
+      "internalType": "uint32",
+      "name": "latestVersion",
+      "type": "uint32"
+     },
+     {
+      "internalType": "enum VerityRegistry.DocumentType",
+      "name": "docType",
+      "type": "uint8"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "metadataHash",
+      "type": "bytes32"
+     },
+     {
+      "internalType": "uint64",
+      "name": "registeredAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "expiresAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "uint64",
+      "name": "revokedAt",
+      "type": "uint64"
+     },
+     {
+      "internalType": "address",
+      "name": "revokedBy",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "reasonHash",
+      "type": "bytes32"
+     }
+    ],
+    "internalType": "struct VerityRegistry.Verification",
+    "name": "v",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "documentId",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint32",
+    "name": "version",
+    "type": "uint32"
+   }
+  ],
+  "name": "versionHash",
+  "outputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ }
+]
