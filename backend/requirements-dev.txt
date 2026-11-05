@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest==9.2.0
+
+# Embedded PostgreSQL for tests/dev when no TEST_DATABASE_URL / Docker Postgres is available
+pgserver; python_version < "3.13"
